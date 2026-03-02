@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-text-bright: var(--text-bright);
+  --color-status-online: var(--status-online);
+  --color-status-locked: var(--status-locked);
+  --color-danger: var(--danger);
+}
+
+@layer base {
+  :root {
+    --background: hsl(220, 8%, 10%);
+    --foreground: hsl(220, 8%, 82%);
+
+    --card: hsl(220, 8%, 13%);
+    --card-foreground: hsl(220, 8%, 82%);
+
+    --popover: hsl(220, 8%, 13%);
+    --popover-foreground: hsl(220, 8%, 82%);
+
+    --primary: hsl(213, 42%, 46%);
+    --primary-foreground: hsl(213, 20%, 94%);
+
+    --secondary: hsl(220, 6%, 16%);
+    --secondary-foreground: hsl(220, 7%, 60%);
+
+    --muted: hsl(220, 6%, 14%);
+    --muted-foreground: hsl(220, 5%, 42%);
+
+    --accent: hsl(213, 42%, 46%);
+    --accent-foreground: hsl(213, 20%, 94%);
+
+    --destructive: hsl(0, 42%, 46%);
+    --destructive-foreground: hsl(0, 0%, 94%);
+
+    --border: hsl(220, 5%, 19%);
+    --input: hsl(220, 5%, 19%);
+    --ring: hsl(213, 42%, 46%);
+
+    --radius: 0.25rem;
+
+    --surface: hsl(220, 6%, 14%);
+    --surface-hover: hsl(220, 6%, 17%);
+    --text-bright: hsl(220, 8%, 90%);
+    --status-online: hsl(145, 34%, 40%);
+    --status-locked: hsl(220, 5%, 30%);
+    --danger: hsl(0, 42%, 46%);
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  button,
+  select,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  body {
+    @apply text-foreground antialiased;
+    background: transparent;
+    font-family: 'Roboto', sans-serif;
+  }
+}
+
+@layer components {
+  .noise-overlay {
+    position: relative;
+  }
+
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .panel-row {
+    @apply flex items-center gap-3 px-3 py-3 border-b border-border;
+    transition: background 0.15s ease;
+  }
+
+  .panel-row:last-child {
+    border-bottom: none;
+  }
+
+  .panel-row:hover {
+    background: var(--surface-hover);
+  }
+
+  .btn-solid {
+    @apply px-4 py-2 text-xs font-medium tracking-wide rounded;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+  }
+
+  .btn-solid:hover {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
+
+  .btn-solid:disabled {
+    @apply bg-muted text-muted-foreground cursor-not-allowed;
+    opacity: 0.5;
+  }
+
+  .btn-outline-danger {
+    @apply px-4 py-2 text-xs font-medium tracking-wide rounded border;
+    color: hsl(0, 52%, 58%);
+    border-color: hsl(0 42% 46% / 0.3);
+    background: transparent;
+    transition: all 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+  }
+
+  .btn-outline-danger:hover {
+    background: hsl(0 42% 46% / 0.07);
+    border-color: hsl(0 42% 46% / 0.45);
+    transform: scale(1.02);
+  }
+
+  .btn-neutral {
+    @apply px-4 py-2 text-xs font-medium tracking-wide rounded bg-secondary text-secondary-foreground border border-border;
+    transition: background 0.15s ease, transform 0.1s ease;
+    cursor: pointer;
+  }
+
+  .btn-neutral:hover {
+    background: var(--surface-hover);
+    transform: scale(1.02);
+  }
+
+  .tag {
+    @apply inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium tracking-wider rounded;
+  }
+
+  .tag-easy {
+    @apply inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium tracking-wider rounded;
+    color: hsl(145, 34%, 52%);
+    background: hsl(145 34% 52% / 0.09);
+  }
+
+  .tag-medium {
+    @apply inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium tracking-wider rounded;
+    color: hsl(38, 40%, 56%);
+    background: hsl(38 40% 56% / 0.09);
+  }
+
+  .tag-hard {
+    @apply inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium tracking-wider rounded;
+    color: hsl(213, 50%, 62%);
+    background: hsl(213 50% 62% / 0.09);
+  }
+
+  .tag-extreme {
+    @apply inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium tracking-wider rounded;
+    color: hsl(0, 48%, 56%);
+    background: hsl(0 48% 56% / 0.09);
+  }
+}
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-fade {
+    animation: fade-in 0.2s ease-out forwards;
+  }
+}
+
+
