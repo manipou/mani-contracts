@@ -8,7 +8,7 @@ author 'ManiMods'
 ui_page 'http://localhost:5173/' -- Uncomment this if you are using Vite (live preview when developing)
 -- ui_page 'web/build/index.html'
 
-client_script 'client/*.lua'
+client_script 'client.lua'
 server_script 'server.lua'
 shared_script '@jet-lib/init.lua'
 

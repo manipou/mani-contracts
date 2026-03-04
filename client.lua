@@ -3,11 +3,21 @@ local Target = exports['ox_target']
 
 local function OpenMenu()
     local Contracts = Jet.Callback.Await('mani-contracts:server:GetContracts', false)
+
+    print(json.encode(Contracts))
+
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = 'OpenContracts',
+        data = {
+            Contracts = Contracts
+        }
+    })
 end
 
 CreateThread(function()
     local NPCCoords = Jet.Callback.Await('mani-contracts:server:GetNPCLocation', false)
-    local NPCModel = GetHashKey(Config.NPC.Model)
+    local NPCModel = GetHashKey('IG_LesterCrest')
 
     Jet.Points.New({
         coords = NPCCoords,
@@ -36,3 +46,5 @@ CreateThread(function()
         end
     })
 end)
+
+RegisterNuiCallback('HideUi', function() SetNuiFocus(false, false) end)

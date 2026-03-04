@@ -3,15 +3,13 @@ export type ContractState = 'available' | 'active' | 'locked';
 
 export interface Contract {
   id: string;
-  label: string;
-  description: string;
-  image: string;
-  payout: string;
-  difficulty: ContractDifficulty;
-  requiredXP: number;
-  requiredLevel: number;
-  single: boolean;
-  active: boolean;
+  Label: string;
+  Description: string;
+  Image: string;
+  Difficulty: ContractDifficulty;
+  RequiredLevel: number;
+  OneTime: boolean;
+  Requirements: string[];
 }
 
 export interface TeamMember {

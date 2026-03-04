@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { visibilityStore as Visible } from "$lib/stores/VisibilityStore";
 	import { useNuiEvent } from "$lib/utils/useNuiEvent";
+	import { fetchNui } from "$lib/utils/fetchNui";
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -8,10 +9,15 @@
 
 	let { children }: Props = $props();
 
-	useNuiEvent("OpenMenu", () => {
-		Visible.show();
-	});
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape' && $Visible) {
+			Visible.hide();
+			fetchNui('HideUi');
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 {#if $Visible}
 	{@render children?.()}

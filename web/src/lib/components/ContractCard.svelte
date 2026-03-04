@@ -11,8 +11,9 @@
   let { contract, playerXP, onClick }: Props = $props();
 
   const getState = (c: Contract, xp: number): ContractState => {
-    if (c.active) return 'active';
-    if (xp < c.requiredXP) return 'locked';
+    // Todo
+    // if (c.active) return 'active';
+    // if (xp < c.requiredXP) return 'locked';
     return 'available';
   };
 
@@ -37,8 +38,8 @@
   <!-- Image -->
   <div class="relative h-28 overflow-hidden">
     <img
-      src={contract.image}
-      alt={contract.label}
+      src={contract.Image}
+      alt={contract.Label}
       class="w-full h-full object-cover transition-opacity duration-150
         {state === 'locked'
           ? 'grayscale brightness-[0.4]'
@@ -62,7 +63,7 @@
     {/if}
 
     <!-- One-time tag -->
-    {#if contract.single}
+    {#if contract.OneTime}
       <div class="absolute top-2 left-2 px-1.5 py-0.5 rounded-sm" style="background: hsl(220 8% 10% / 0.75);">
         <span class="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">
           One-Time
@@ -74,15 +75,15 @@
   <!-- Info -->
   <div class="p-3 pb-3.5">
     <h3 class="text-sm font-medium text-text-bright leading-tight mb-2 truncate">
-      {contract.label}
+      {contract.Label}
     </h3>
     <div class="flex items-center justify-between">
       <span class="text-[11px] text-muted-foreground tabular-nums">
         {state === 'locked'
-          ? `Requires Level ${contract.requiredLevel}`
-          : `Level ${contract.requiredLevel}`}
+          ? `Requires Level ${contract.RequiredLevel}`
+          : `Level ${contract.RequiredLevel}`}
       </span>
-      <span class={diffTag[contract.difficulty]}>{contract.difficulty}</span>
+      <span class={diffTag[contract.Difficulty]}>{contract.Difficulty}</span>
     </div>
   </div>
 </button>
