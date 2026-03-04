@@ -2,16 +2,14 @@ local Config = require 'config'
 local Target = exports['ox_target']
 
 local function OpenMenu()
-    local Contracts = Jet.Callback.Await('mani-contracts:server:GetContracts', false)
+    local MenuData = Jet.Callback.Await('mani-contracts:server:GetMenuData', false)
 
-    print(json.encode(Contracts))
+    print(json.encode(MenuData.Contracts))
 
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'OpenContracts',
-        data = {
-            Contracts = Contracts
-        }
+        data = MenuData
     })
 end
 
@@ -47,4 +45,45 @@ CreateThread(function()
     })
 end)
 
-RegisterNuiCallback('HideUi', function() SetNuiFocus(false, false) end)
+RegisterNuiCallback('HideUi', function(_, cb)
+    SetNuiFocus(false, false)
+    TriggerServerEvent('mani-contracts:server:CloseMenu')
+    cb({})
+end)
+
+RegisterNuiCallback('StartContract', function(Data, cb)
+    local Contract = Jet.Callback.Await('mani-contracts:server:StartContract', false, Data.Id)
+    if not Contract then return cb({ Success = false }) end
+
+    exports[Contract.Resource][Contract.Export]()
+
+    cb({ Success = true, Data = Contract })
+end)
+
+RegisterNuiCallback('CreateTeam', function(_, cb)
+    local TeamData = Jet.Callback.Await('mani-contracts:server:CreateTeam', false)
+    if not TeamData then return cb({ Success = false }) end
+    cb({ Success = true, Data = TeamData })
+end)
+
+RegisterNuiCallback('DisbandTeam', function(_, cb)
+    local Success = Jet.Callback.Await('mani-contracts:server:DisbandTeam', false)
+    cb({ Success = Success })
+end)
+
+RegisterNuiCallback('InviteTeam', function(Data, cb)
+    local Success = Jet.Callback.Await('mani-contracts:server:InviteTeam', false, Data.Source)
+    cb({ Success = Success })
+end)
+
+Jet.Callback.Register('mani-contracts:server:ConfirmInvite', function(By)
+    -- Todo
+    return true
+end)
+
+RegisterNetEvent('mani-contracts:client:UpdateMenu', function(Contracts)
+    SendNUIMessage({
+        action = 'UpdateContracts',
+        data = Contracts
+    })
+end)

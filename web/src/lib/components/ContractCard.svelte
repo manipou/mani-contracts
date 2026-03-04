@@ -12,7 +12,7 @@
 
   const getState = (c: Contract, xp: number): ContractState => {
     // Todo
-    // if (c.active) return 'active';
+    if (c.InProgress) return 'active';
     // if (xp < c.requiredXP) return 'locked';
     return 'available';
   };

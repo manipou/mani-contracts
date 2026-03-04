@@ -5,12 +5,11 @@
     xp: number;
     nextLevelXP: number;
     level: number;
-    unlockedCount: number;
     totalCount: number;
     onClose: () => void;
   }
 
-  let { xp, nextLevelXP, level, unlockedCount, totalCount, onClose }: Props = $props();
+  let { xp, nextLevelXP, level, totalCount, onClose }: Props = $props();
 
   const progress = $derived((xp / nextLevelXP) * 100);
 </script>
@@ -20,9 +19,6 @@
   <div class="flex items-center gap-4 min-w-[200px]">
     <span class="text-sm font-semibold tracking-widest text-text-bright uppercase">
       contracts
-    </span>
-    <span class="text-[11px] text-muted-foreground">
-      Unlocked: {unlockedCount}/{totalCount}
     </span>
   </div>
 

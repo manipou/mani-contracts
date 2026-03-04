@@ -151,12 +151,13 @@ body {
     @apply px-4 py-2 text-xs font-medium tracking-wide rounded;
     background: var(--primary);
     color: var(--primary-foreground);
-    transition: opacity 0.15s ease, transform 0.1s ease;
+    transition: filter 0.15s ease, transform 0.1s ease;
+    will-change: transform;
     cursor: pointer;
   }
 
   .btn-solid:hover {
-    opacity: 0.88;
+    filter: brightness(0.88);
     transform: scale(1.02);
   }
 
@@ -226,8 +227,17 @@ body {
     to { opacity: 1; }
   }
 
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
   .animate-fade {
     animation: fade-in 0.2s ease-out forwards;
+  }
+
+  .animate-fade-out {
+    animation: fade-out 0.18s ease-in forwards;
   }
 }
 

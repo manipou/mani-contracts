@@ -2,7 +2,7 @@ export type ContractDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Extreme';
 export type ContractState = 'available' | 'active' | 'locked';
 
 export interface Contract {
-  id: string;
+  Id: number;
   Label: string;
   Description: string;
   Image: string;
@@ -10,12 +10,14 @@ export interface Contract {
   RequiredLevel: number;
   OneTime: boolean;
   Requirements: string[];
+  InProgress: boolean;
+  Removed ?: boolean;
 }
 
 export interface TeamMember {
-  name: string;
-  leader: boolean;
-  avatar?: string;
+  Name: string;
+  IsLeader: boolean;
+  Source: number;
 }
 
 export interface PlayerData {

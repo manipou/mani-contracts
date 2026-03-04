@@ -1,6 +1,7 @@
 <script lang="ts">
   import { X, Lock, Shield, Users, User, Package } from '@lucide/svelte';
   import type { Contract, ContractState } from '$lib/types/contracts';
+  import { fetchNui } from '$lib/utils/fetchNui';
 
   interface Props {
     contract: Contract;
@@ -10,27 +11,41 @@
 
   let { contract, playerXP, onClose }: Props = $props();
 
+  let closing = $state(false);
+
+  function close() {
+    closing = true;
+    setTimeout(onClose, 180);
+  }
+
   const getState = (c: Contract, xp: number): ContractState => {
     // Todo
-    // if (c.active) return 'active';
     // if (xp < c.requiredXP) return 'locked';
+    if (c.InProgress) return 'active';
     return 'available';
   };
 
   const state = $derived(getState(contract, playerXP));
+
+  async function StartContract() {
+    const Response = await fetchNui('StartContract', contract);
+    if (Response.Success) {
+      close();
+    }
+  }
 </script>
 
-<div class="fixed inset-0 z-50 flex items-center justify-center p-8 animate-fade">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-8 {closing ? 'animate-fade-out' : 'animate-fade'}">
   <!-- Backdrop -->
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="absolute inset-0 bg-background/85" onclick={onClose}></div>
+  <div class="absolute inset-0 bg-background/85" onclick={close}></div>
 
   <!-- Modal -->
-  <div class="relative w-full max-w-md panel overflow-hidden animate-fade">
+    <div class="relative w-full max-w-md panel overflow-hidden animate-fade isolate">
     <!-- Close -->
     <button
-      onclick={onClose}
+      onclick={close}
       class="absolute top-3 right-3 z-10 p-1.5 rounded hover:bg-secondary hover:scale-110 transition-all duration-150"
     >
       <X size={16} class="text-muted-foreground" />
@@ -118,7 +133,7 @@
           Locked — Requires Level {contract.RequiredLevel}
         </button>
       {:else}
-        <button class="btn-solid w-full py-2.5">
+        <button class="btn-solid w-full py-2.5" onclick={StartContract}>
           Start Contract
         </button>
       {/if}
