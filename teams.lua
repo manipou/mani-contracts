@@ -3,6 +3,7 @@ local Config = require 'config'
 local TeamClass = {}
 TeamClass.__index = TeamClass
 
+---@param Source number
 function TeamClass:New(Source)
     local PlayerData = Jet.Framework.GetPlayerData(Source)
     if not PlayerData then return end
@@ -19,6 +20,7 @@ function TeamClass:New(Source)
     }, TeamClass)
 end
 
+---@param Source number
 function TeamClass:AddMember(Source)
     local PlayerData = Jet.Framework.GetPlayerData(Source)
     if not PlayerData then return end
@@ -30,6 +32,7 @@ function TeamClass:AddMember(Source)
     })
 end
 
+---@param Source number
 function TeamClass:RemoveMember(Source)
     for i, Member in ipairs(self.Members) do
         if not Member.IsLeader and Member.Source == Source then
@@ -39,6 +42,7 @@ function TeamClass:RemoveMember(Source)
     end
 end
 
+---@param Func fun(Source: number)
 function TeamClass:Run(Func)
     for i = 1, #self.Members do
         Func(self.Members[i])

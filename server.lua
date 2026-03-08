@@ -5,11 +5,13 @@ local Registered, Contracts, Teams, TeamsCache = {}, {}, {}, {}
 
 local MenuCache = {}
 
+---@param Source number
 local function AddMenuCache(Source)
     for _, src in ipairs(MenuCache) do if src == Source then return end end
     table.insert(MenuCache, Source)
 end
 
+---@param Source number
 local function RemoveMenuCache(Source)
     for i, src in ipairs(MenuCache) do
         if src == Source then
@@ -19,10 +21,19 @@ local function RemoveMenuCache(Source)
     end
 end
 
+---@param Func fun(Source: number)
 local function MenuAction(Func)
     for _, Source in ipairs(MenuCache) do
         Func(Source)
     end
+end
+
+---@param Source number
+local function GetTeam(Source)
+    if Teams[Source] then return Teams[Source] end
+    if TeamsCache[Source] then return Teams[TeamsCache[Source]] end
+
+    return false
 end
 
 AddEventHandler('playerDropped', function() RemoveMenuCache(source) end)
@@ -68,11 +79,13 @@ end)
 Jet.Callback.Register('mani-contracts:server:GetMenuData', function(Source)
     AddMenuCache(Source)
 
-    local TeamsData = { InTeam = false }
+    local Team = GetTeam(Source)
+
+    local TeamsData = { InTeam = Team ~= false }
 
     if TeamsData.InTeam then
-        TeamsData.IsLeader = Jet.Teams.IsLeader(Source)
-        TeamsData.Members = Jet.Teams.GetMembers(Source)
+        TeamsData.IsLeader = Team.Leader == Source
+        TeamsData.Members = Team.Members
     end
 
     return {
@@ -111,23 +124,30 @@ end)
 
 Jet.Callback.Register('mani-contracts:server:DisbandTeam', function(Source)
     if not Teams[Source] then return false end
+
+    Teams[Source]:Run(function(Member) TeamsCache[Member.Source] = nil end)
     Teams[Source] = nil
 
     return true
 end)
 
 Jet.Callback.Register('mani-contracts:server:InviteTeam', function(Source, Target)
-    if not Teams[Source] then return false end
-    if Teams[Target] or TeamsCache[Target] then return false end
+    if not Teams[Source] then return false, "You aren't in a team" end
+    -- if Teams[Target] or TeamsCache[Target] then return false, ('%s is already in a team'):format(GetPlayerName(Target)) end
 
     local Confirm = Jet.Callback.Await('mani-contracts:server:ConfirmInvite', Target, Source)
-    if not Confirm then return false end
+    if not Confirm then return false, ("%s didn't accept your invite"):format(GetPlayerName(Target)) end
 
     Teams[Source]:AddMember(Target)
     TeamsCache[Target] = Source
 
     return true
 end)
+
+exports('GetTeam', GetTeam)
+
+
+-- TEMP STUFF
 
 local TempNPCLocations = {
     vec4(712.06, 2532.81, 72.41, 90.03),

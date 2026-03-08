@@ -59,19 +59,20 @@
 <div class="w-56 flex flex-col gap-3 shrink-0">
   {#if !inTeam}
     <!-- No team -->
-    <div class="panel flex flex-col items-center justify-center gap-3 py-8 px-4 text-center flex-1">
-      <div class="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center">
-        <Users size={18} class="text-muted-foreground" />
+    <div class="panel flex flex-col">
+      <div class="px-3 py-2.5 border-b border-border">
+        <span class="text-xs font-medium tracking-widest text-muted-foreground uppercase">
+          Team
+        </span>
       </div>
-      <div>
-        <p class="text-sm font-medium text-foreground">No Team</p>
-        <p class="text-[11px] text-muted-foreground mt-0.5">Create or join a team to run contracts together.</p>
+      <div class="flex flex-col items-center py-6 px-4 text-center">
+        <p class="text-[11px] text-muted-foreground">Create or join a team to run contracts together.</p>
       </div>
-      <button class="btn-solid w-full flex items-center justify-center gap-2 mt-1" onclick={CreateTeam}>
-        <UserPlus size={13} />
-        Create Team
-      </button>
     </div>
+    <button class="btn-solid w-full flex items-center justify-center gap-2" onclick={CreateTeam}>
+      <UserPlus size={13} />
+      Create Team
+    </button>
   {:else}
     <div class="panel flex flex-col">
       <!-- Header -->
@@ -82,7 +83,7 @@
       </div>
 
       <!-- Members -->
-      {#each team as member (member.Name)}
+      {#each team as member}
         <div class="panel-row">
           <!-- Avatar -->
           <div class="w-7 h-7 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">

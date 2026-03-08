@@ -4,6 +4,7 @@
 	import TeamPanel from "$lib/components/TeamPanel.svelte";
 	import ContractCard from "$lib/components/ContractCard.svelte";
 	import ContractDetail from "$lib/components/ContractDetail.svelte";
+	import InviteNotify from "$lib/components/InviteNotify.svelte";
 	import type { Contract, TeamMember } from "$lib/types/contracts";
 
 	import { visibilityStore as Visible } from "$lib/stores/VisibilityStore";
@@ -57,6 +58,8 @@
 		)
 	);
 </script>
+
+<InviteNotify />
 
 <VisibilityProvider>
 	<div class="w-full h-screen flex items-center justify-center">
