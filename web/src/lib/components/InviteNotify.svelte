@@ -35,7 +35,7 @@
 </script>
 
 {#if visible}
-  <div class="fixed top-8 left-175 z-[9999] {closing ? 'animate-slide-down' : 'animate-slide-up'}">
+  <div class="fixed left-6 top-[30%] z-[9999] {closing ? 'animate-slide-out-left' : 'animate-slide-in-left'}">
     <div class="panel overflow-hidden w-80 shadow-2xl">
       <!-- Header -->
       <div class="flex items-center gap-2.5 px-4 py-3 border-b border-border bg-card">

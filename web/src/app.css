@@ -242,6 +242,16 @@ body {
     to   { opacity: 0; transform: translateY(-16px); }
   }
 
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-out-left {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-32px); }
+  }
+
   @keyframes countdown {
     from { width: 100%; }
     to   { width: 0%; }
@@ -261,6 +271,14 @@ body {
 
   .animate-slide-down {
     animation: slide-down 0.22s ease-in forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.2s ease-out forwards;
+  }
+
+  .animate-slide-out-left {
+    animation: slide-out-left 0.2s ease-in forwards;
   }
 
   .animate-countdown {

@@ -47,6 +47,12 @@ RegisterNuiCallback('InviteTeam', function(Data, cb)
     cb({ Success = Success })
 end)
 
+RegisterNuiCallback('KickTeamMember', function(Data, cb)
+    local NewMembers = Jet.Callback.Await('mani-contracts:server:KickTeamMember', false, Data.Source)
+
+    cb(NewMembers)
+end)
+
 RegisterNetEvent('mani-contracts:client:UpdateMenu', function(Contracts)
     SendNUIMessage({
         action = 'UpdateContracts',

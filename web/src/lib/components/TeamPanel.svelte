@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UserPlus, LogOut, Trash2, Users, Send, X } from '@lucide/svelte';
+  import { UserPlus, LogOut, Trash2, Users, Send, X, UserMinus } from '@lucide/svelte';
   import type { TeamMember } from '$lib/types/contracts';
   import { fetchNui } from "$lib/utils/fetchNui";
 
@@ -15,6 +15,25 @@
   let showInvite = $state(false);
   let inviteId = $state('');
   let inviteInput = $state<HTMLInputElement | null>(null);
+
+  // Context menu state
+  let contextMenu = $state<{ member: TeamMember; x: number; y: number } | null>(null);
+
+  function openContextMenu(e: MouseEvent, member: TeamMember) {
+    e.preventDefault();
+    contextMenu = { member, x: e.clientX, y: e.clientY };
+  }
+
+  function closeContextMenu() {
+    contextMenu = null;
+  }
+
+  async function KickMember() {
+    if (!contextMenu) return;
+    const NewTeamData = await fetchNui('KickTeamMember', { Source: contextMenu.member.Source });
+    team = NewTeamData;
+    closeContextMenu();
+  }
 
   function toggleInvite() {
     showInvite = !showInvite;
@@ -84,7 +103,10 @@
 
       <!-- Members -->
       {#each team as member}
-        <div class="panel-row">
+        <div
+          class="panel-row {isLeader && !member.IsLeader ? 'cursor-context-menu select-none' : ''}"
+          oncontextmenu={isLeader && !member.IsLeader ? (e) => openContextMenu(e, member) : undefined}
+        >
           <!-- Avatar -->
           <div class="w-7 h-7 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
             <span class="text-[10px] font-semibold text-muted-foreground uppercase">
@@ -158,3 +180,30 @@
     </div>
   {/if}
 </div>
+
+<!-- Context menu -->
+{#if contextMenu}
+  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+  <div
+    class="fixed inset-0 z-50"
+    onclick={closeContextMenu}
+    oncontextmenu={(e) => { e.preventDefault(); closeContextMenu(); }}
+  ></div>
+  <div
+    class="fixed z-50 w-40 rounded border border-border bg-card shadow-xl overflow-hidden"
+    style="left: {contextMenu.x}px; top: {contextMenu.y}px;"
+  >
+    <div class="px-3 py-2 border-b border-border">
+      <p class="text-[10px] font-medium tracking-widest text-muted-foreground uppercase truncate">{contextMenu.member.Name}</p>
+    </div>
+    <div class="p-1">
+      <button
+        class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded text-[11px] font-medium tracking-wide text-[hsl(0,52%,58%)] hover:bg-destructive/10 transition-colors text-left"
+        onclick={KickMember}
+      >
+        <UserMinus size={12} class="shrink-0" />
+        Kick Member
+      </button>
+    </div>
+  </div>
+{/if}

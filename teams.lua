@@ -1,5 +1,3 @@
-local Config = require 'config'
-
 local TeamClass = {}
 TeamClass.__index = TeamClass
 
@@ -8,16 +6,18 @@ function TeamClass:New(Source)
     local PlayerData = Jet.Framework.GetPlayerData(Source)
     if not PlayerData then return end
 
-    return setmetatable({
-        Leader = Source,
-        Members = {
-            {
-                Source = Source,
-                Name = PlayerData.character.fullName,
-                IsLeader = true
-            }
-        },
-    }, TeamClass)
+    local NewSelf = table.clone(self)
+
+    NewSelf.Leader = Source
+    NewSelf.Members = {
+        {
+            Source = Source,
+            Name = PlayerData.character.fullName,
+            IsLeader = true
+        }
+    }
+
+    return NewSelf
 end
 
 ---@param Source number

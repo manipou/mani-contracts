@@ -144,6 +144,17 @@ Jet.Callback.Register('mani-contracts:server:InviteTeam', function(Source, Targe
     return true
 end)
 
+Jet.Callback.Register('mani-contracts:server:KickTeamMember', function(Source, Target)
+    local Team = GetTeam(Source)
+    if not Team then return {} end
+    if Team.Leader ~= Source then return {} end
+
+    Team:RemoveMember(Target)
+    TeamsCache[Target] = nil
+
+    return Team.Members
+end)
+
 exports('GetTeam', GetTeam)
 
 

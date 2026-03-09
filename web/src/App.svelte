@@ -9,6 +9,7 @@
 
 	import { visibilityStore as Visible } from "$lib/stores/VisibilityStore";
 	import { useNuiEvent } from "$lib/utils/useNuiEvent";
+	import { fetchNui } from "$lib/utils/fetchNui";
 
 	let inTeam = $state(false);
 	let isLeader = $state(false);
@@ -69,7 +70,10 @@
 				nextLevelXP={nextLevelXP}
 				level={playerLevel}
 				totalCount={contracts.length}
-				onClose={() => {}}
+				onClose={() => {
+					Visible.hide();
+					fetchNui('HideUi');
+				}}
 			/>
 
 			<div class="flex flex-1 overflow-hidden p-4 gap-4">
