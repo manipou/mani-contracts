@@ -27,3 +27,7 @@ export interface PlayerData {
   team: TeamMember[];
   contracts: Contract[];
 }
+
+export interface Config {
+  MaxTeamSize: number;
+}

@@ -16,6 +16,8 @@ function TeamClass:New(Source)
             IsLeader = true
         }
     }
+    NewSelf.Metadata = {}
+    NewSelf.Locked = false
 
     return NewSelf
 end
@@ -47,6 +49,25 @@ function TeamClass:Run(Func)
     for i = 1, #self.Members do
         Func(self.Members[i])
     end
+end
+
+---@param Key string
+---@param Value any
+function TeamClass:SetMetadata(Key, Value)
+    self.Metadata[Key] = Value
+end
+
+---@param Key string
+---@param Default any
+---@return any
+function TeamClass:GetMetadata(Key, Default)
+    Default = Default or false
+    return self.Metadata[Key] or Default
+end
+
+---@param State boolean
+function TeamClass:SetLock(State)
+    self.Locked = State
 end
 
 return TeamClass

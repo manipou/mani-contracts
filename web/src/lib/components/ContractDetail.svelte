@@ -29,9 +29,7 @@
 
   async function StartContract() {
     const Response = await fetchNui('StartContract', contract);
-    if (Response.Success) {
-      close();
-    }
+    close();
   }
 </script>
 

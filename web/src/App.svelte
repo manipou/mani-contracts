@@ -5,7 +5,7 @@
 	import ContractCard from "$lib/components/ContractCard.svelte";
 	import ContractDetail from "$lib/components/ContractDetail.svelte";
 	import InviteNotify from "$lib/components/InviteNotify.svelte";
-	import type { Contract, TeamMember } from "$lib/types/contracts";
+	import type { Contract, TeamMember, Config } from "$lib/types/contracts";
 
 	import { visibilityStore as Visible } from "$lib/stores/VisibilityStore";
 	import { useNuiEvent } from "$lib/utils/useNuiEvent";
@@ -16,6 +16,10 @@
 	let contracts: Contract[] = $state<Contract[]>([]);
 	let team: TeamMember[] = $state<TeamMember[]>([]);
 
+	let playerXP = $state(0);
+	let playerLevel =  $state(1);
+	let nextLevelXP =  $state(0);
+
 	interface MenuData {
 		TeamsData: {
 			InTeam: boolean;
@@ -23,12 +27,21 @@
 			Members: TeamMember[];
 		};
 		Contracts: Contract[];
+		Level: {
+			XP: number;
+			Stage: number;
+			Next: number;
+		};
 	}
 
 	useNuiEvent<MenuData>("OpenContracts", (Data) => {
 		Visible.show();
 		contracts = Data.Contracts;
 		inTeam = Data.TeamsData.InTeam;
+
+		playerXP = Data.Level.XP;
+		playerLevel = Data.Level.Stage;
+		nextLevelXP = Data.Level.Next;
 
 		if (inTeam) {
 			team = Data.TeamsData.Members;
@@ -43,10 +56,6 @@
 	type SortOption = 'xp' | 'difficulty';
 
 	const diffOrder: Record<string, number> = { Easy: 0, Medium: 1, Hard: 2, Extreme: 3 };
-
-	const playerXP = 1250;
-	const playerLevel = 3;
-	const nextLevelXP = 2000;
 
 	let selectedContract = $state<Contract | null>(null);
 	let sort = $state<SortOption>('xp');
@@ -98,17 +107,27 @@
 
 					<!-- Grid -->
 					<div class="flex-1 overflow-y-auto pr-1">
-						<div class="grid grid-cols-3 gap-3">
-							{#each sorted as contract (contract.Id)}
-								{#if !contract.Removed}
-									<ContractCard
-										{contract}
-										{playerXP}
-										onClick={() => selectedContract = contract}
-									/>
-								{/if}
-							{/each}
-						</div>
+						{#if sorted.filter(c => !c.Removed).length === 0}
+							<div class="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground select-none">
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-3-3v6M4.5 12a7.5 7.5 0 1115 0 7.5 7.5 0 01-15 0z" />
+								</svg>
+								<p class="text-sm font-medium tracking-wide">No contracts available</p>
+								<p class="text-xs opacity-60">Check back later — new contracts will appear over time.</p>
+							</div>
+						{:else}
+							<div class="grid grid-cols-3 gap-3">
+								{#each sorted as contract (contract.Id)}
+									{#if !contract.Removed}
+										<ContractCard
+											{contract}
+											{playerXP}
+											onClick={() => selectedContract = contract}
+										/>
+									{/if}
+								{/each}
+							</div>
+						{/if}
 					</div>
 				</div>
 			</div>

@@ -4,15 +4,12 @@ local Target = exports['ox_target']
 local function OpenMenu()
     local MenuData = Jet.Callback.Await('mani-contracts:server:GetMenuData', false)
 
-    print(json.encode(MenuData.Contracts))
-
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'OpenContracts',
         data = MenuData
     })
 end
-
 
 RegisterNuiCallback('HideUi', function(_, cb)
     SetNuiFocus(false, false)
@@ -21,8 +18,8 @@ RegisterNuiCallback('HideUi', function(_, cb)
 end)
 
 RegisterNuiCallback('StartContract', function(Data, cb)
-    local Contract = Jet.Callback.Await('mani-contracts:server:StartContract', false, Data.Id)
-    if not Contract then return cb({ Success = false }) end
+    local Contract, Message = Jet.Callback.Await('mani-contracts:server:StartContract', false, Data.Id)
+    if not Contract then Jet.Notify({ title = 'Error', description = Message, type = 'error' }) return cb({ Success = false }) end
 
     exports[Contract.Resource][Contract.Export]()
 
@@ -63,7 +60,7 @@ end)
 
 
 
-
+-- Teams
 
 local Invite = nil
 
