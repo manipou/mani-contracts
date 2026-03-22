@@ -1,4 +1,3 @@
-local Config = require 'config'
 local Target = exports['ox_target']
 
 local function OpenMenu()

@@ -90,9 +90,19 @@ exports('Register', function(Contract)
             if Team then
                 Team:SetMetadata('Contract', nil)
                 Team:SetLock(false)
+
+                local MemberAmount = #Team.Members
+                local XPReward = math.floor(Contract.XPReward / MemberAmount)
+
+                Team:Run(function(Member)
+                    local MemberSource = Member.Source
+                    Jet.AddMetaData(MemberSource, 'contracts:xp', XPReward)
+                end)
+            else
+                Jet.AddMetaData(Source, 'contracts:xp', Contract.XPReward)
             end
         end
-        
+
         if Contract.Limited and Config.Limited ~= 0 then
             ActiveContracts = math.max(ActiveContracts - 1, 0)
         end
@@ -127,6 +137,9 @@ end)
 
 Jet.Callback.Register('mani-contracts:server:StartContract', function(Source, Id)
     local Contract = Contracts[Id]
+
+    local PoliceCount = Jet.GetJobCount(Config.PoliceJob)
+    if Contract.RequiredPolice and PoliceCount < Contract.RequiredPolice then return false, 'There are not enough police online for this contract' end
 
     local XP = Jet.GetMetaData(Source, 'contracts:xp', 0)
     local Level = GetLevel(XP)

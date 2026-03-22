@@ -1,6 +1,6 @@
 local Config = {}
 
-Config.Debug = true
+Config.Debug = false
 
 Config.Levels = { -- From 1 to ...
     1000,
@@ -16,5 +16,7 @@ Config.Limited = 1 -- Set to 0 for unlimited
 Config.MaxTeamSize = 4 -- Todo: Add to UI
 
 Config.Interval = { 600000, 900000 }
+
+Config.PoliceJob = 'police'
 
 return Config
